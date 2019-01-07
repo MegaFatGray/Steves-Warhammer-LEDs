@@ -38,9 +38,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f0xx_hal.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 /* USER CODE END Includes */
 
@@ -48,6 +52,10 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+#define PERIOD_MIN 100			// minimum period in milliseconds
+#define PERIOD_MAX 1000			// maximum period in milliseconds
+
+//static uint8_t ledStatus[3];		// array to store 
 
 /* USER CODE END PV */
 
@@ -56,6 +64,7 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+uint32_t GenerateRandomNumber(void);
 
 /* USER CODE END PFP */
 
@@ -88,8 +97,10 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
+	srand(10); // randomize seed
 
   /* USER CODE END 2 */
 
@@ -97,6 +108,19 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		//uint32_t tickNow = HAL_GetTick();
+		
+		uint32_t period = GenerateRandomNumber();
+		//HAL_GPIO_WritePin(LED1_R_GPIO_Port, LED1_R_Pin, GPIO_PIN_SET);
+		
+		HAL_Delay(period);
+		
+		//HAL_GPIO_WritePin(LED1_R_GPIO_Port, LED1_R_Pin, GPIO_PIN_RESET);
+		//period = GenerateRandomNumber();
+		//HAL_GPIO_WritePin(LED1_G_GPIO_Port, LED1_G_Pin, GPIO_PIN_SET);
+		//HAL_Delay(period);
+		//HAL_GPIO_WritePin(LED1_G_GPIO_Port, LED1_G_Pin, GPIO_PIN_RESET);
+		
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
@@ -151,6 +175,27 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+// generates a pseudo-random number in the range PERIOD_MIN to PERIOD_MAX
+uint32_t GenerateRandomNumber(void)
+{
+	char debugString [50];
+	sprintf(debugString, "\r\nrand");
+	HAL_UART_Transmit(&huart2, (uint8_t*)debugString, strlen(debugString), 100);
+	
+	// take a random number in the range 0 -> 0x7fffffff
+	uint32_t x = rand();													
+	sprintf(debugString, "\r\nx = %u", x);
+	HAL_UART_Transmit(&huart2, (uint8_t*)debugString, strlen(debugString), 100);
+	
+	// convert to the desired scale
+	x = (x / (RAND_MAX / (PERIOD_MAX - PERIOD_MIN))) + PERIOD_MIN;
+	sprintf(debugString, "\r\nx = %u", x);
+	HAL_UART_Transmit(&huart2, (uint8_t*)debugString, strlen(debugString), 100);
+
+	return x;
+	
+}
 
 /* USER CODE END 4 */
 

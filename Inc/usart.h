@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * File Name          : USART.h
+  * Description        : This file provides code for the configuration
+  *                      of the USART instances.
   ******************************************************************************
   ** This notice applies to any and all portions of this file
   * that are not between comment pairs USER CODE BEGIN and
@@ -36,76 +37,45 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
+#ifndef __usart_H
+#define __usart_H
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f0xx_hal.h"
+#include "main.h"
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Private define ------------------------------------------------------------*/
-
-#define MCO_Pin GPIO_PIN_0
-#define MCO_GPIO_Port GPIOF
-#define LED5_G_Pin GPIO_PIN_1
-#define LED5_G_GPIO_Port GPIOF
-#define LED1_G_Pin GPIO_PIN_0
-#define LED1_G_GPIO_Port GPIOA
-#define LED1_B_Pin GPIO_PIN_1
-#define LED1_B_GPIO_Port GPIOA
-#define VCP_TX_Pin GPIO_PIN_2
-#define VCP_TX_GPIO_Port GPIOA
-#define LED2_R_Pin GPIO_PIN_3
-#define LED2_R_GPIO_Port GPIOA
-#define LED2_G_Pin GPIO_PIN_4
-#define LED2_G_GPIO_Port GPIOA
-#define LED2_B_Pin GPIO_PIN_5
-#define LED2_B_GPIO_Port GPIOA
-#define LED3_R_Pin GPIO_PIN_6
-#define LED3_R_GPIO_Port GPIOA
-#define LED3_G_Pin GPIO_PIN_7
-#define LED3_G_GPIO_Port GPIOA
-#define LED6_B_Pin GPIO_PIN_0
-#define LED6_B_GPIO_Port GPIOB
-#define LED5_B_Pin GPIO_PIN_1
-#define LED5_B_GPIO_Port GPIOB
-#define LED5_R_Pin GPIO_PIN_8
-#define LED5_R_GPIO_Port GPIOA
-#define LED4_B_Pin GPIO_PIN_11
-#define LED4_B_GPIO_Port GPIOA
-#define SWDIO_Pin GPIO_PIN_13
-#define SWDIO_GPIO_Port GPIOA
-#define SWCLK_Pin GPIO_PIN_14
-#define SWCLK_GPIO_Port GPIOA
-#define VCP_RX_Pin GPIO_PIN_15
-#define VCP_RX_GPIO_Port GPIOA
-#define LED1_R_Pin GPIO_PIN_3
-#define LED1_R_GPIO_Port GPIOB
-#define LED4_R_Pin GPIO_PIN_4
-#define LED4_R_GPIO_Port GPIOB
-#define LED4_G_Pin GPIO_PIN_5
-#define LED4_G_GPIO_Port GPIOB
-#define LED6_R_Pin GPIO_PIN_6
-#define LED6_R_GPIO_Port GPIOB
-#define LED6_G_Pin GPIO_PIN_7
-#define LED6_G_GPIO_Port GPIOB
+extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void _Error_Handler(char *, int);
+extern void _Error_Handler(char *, int);
 
-#define Error_Handler() _Error_Handler(__FILE__, __LINE__)
+void MX_USART2_UART_Init(void);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+
+#ifdef __cplusplus
+}
+#endif
+#endif /*__ usart_H */
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+  */
 
-#endif /* __MAIN_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
