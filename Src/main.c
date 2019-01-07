@@ -38,7 +38,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f0xx_hal.h"
-#include "usart.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
@@ -55,7 +54,16 @@
 #define PERIOD_MIN 100			// minimum period in milliseconds
 #define PERIOD_MAX 1000			// maximum period in milliseconds
 
-//static uint8_t ledStatus[3];		// array to store 
+uint32_t tickNow;						// global access to tick count
+
+typedef enum stateLed1
+{
+	LED1_R,
+	LED1_G,
+	LED1_B
+} stateLed1_t;
+
+stateLed1_t stateLed1 = LED1_R;
 
 /* USER CODE END PV */
 
@@ -65,6 +73,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 uint32_t GenerateRandomNumber(void);
+void led1Handler(void);
 
 /* USER CODE END PFP */
 
@@ -97,7 +106,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
 	srand(10); // randomize seed
@@ -108,18 +116,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		//uint32_t tickNow = HAL_GetTick();
-		
-		uint32_t period = GenerateRandomNumber();
-		//HAL_GPIO_WritePin(LED1_R_GPIO_Port, LED1_R_Pin, GPIO_PIN_SET);
-		
-		HAL_Delay(period);
-		
-		//HAL_GPIO_WritePin(LED1_R_GPIO_Port, LED1_R_Pin, GPIO_PIN_RESET);
-		//period = GenerateRandomNumber();
-		//HAL_GPIO_WritePin(LED1_G_GPIO_Port, LED1_G_Pin, GPIO_PIN_SET);
-		//HAL_Delay(period);
-		//HAL_GPIO_WritePin(LED1_G_GPIO_Port, LED1_G_Pin, GPIO_PIN_RESET);
+		// get the tick count
+		tickNow = HAL_GetTick();
+		// service LED 1 state machine
+		led1Handler();
 		
   /* USER CODE END WHILE */
 
@@ -179,22 +179,110 @@ void SystemClock_Config(void)
 // generates a pseudo-random number in the range PERIOD_MIN to PERIOD_MAX
 uint32_t GenerateRandomNumber(void)
 {
-	char debugString [50];
-	sprintf(debugString, "\r\nrand");
-	HAL_UART_Transmit(&huart2, (uint8_t*)debugString, strlen(debugString), 100);
-	
 	// take a random number in the range 0 -> 0x7fffffff
 	uint32_t x = rand();													
-	sprintf(debugString, "\r\nx = %u", x);
-	HAL_UART_Transmit(&huart2, (uint8_t*)debugString, strlen(debugString), 100);
-	
 	// convert to the desired scale
 	x = (x / (RAND_MAX / (PERIOD_MAX - PERIOD_MIN))) + PERIOD_MIN;
-	sprintf(debugString, "\r\nx = %u", x);
-	HAL_UART_Transmit(&huart2, (uint8_t*)debugString, strlen(debugString), 100);
-
 	return x;
-	
+}
+ // state handler for LED1
+void led1Handler(void)
+{
+	switch(stateLed1)
+		{	
+			static uint8_t frist = 0;					// first pass flag
+			static uint32_t tickWas = 0;			// sysTick at the last transition
+			static uint32_t period = 0;				// random period
+			
+			case LED1_R:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED1_R_GPIO_Port, LED1_R_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED1_R_GPIO_Port, LED1_R_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed1 = LED1_G;
+						frist = 1;
+					}
+					else
+					{
+						stateLed1 = LED1_B;
+						frist = 1;
+					}
+				}
+			break;
+			}
+			
+			case LED1_G:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED1_G_GPIO_Port, LED1_G_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED1_G_GPIO_Port, LED1_G_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed1 = LED1_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed1 = LED1_B;
+						frist = 1;
+					}
+				}
+				break;
+				
+			}
+			case LED1_B:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED1_B_GPIO_Port, LED1_B_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED1_B_GPIO_Port, LED1_B_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed1 = LED1_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed1 = LED1_G;
+						frist = 1;
+					}
+				}
+				break;
+			}
+			
+			default:
+			{
+				while(1);
+			}
+		}
 }
 
 /* USER CODE END 4 */

@@ -54,8 +54,8 @@
 #define LED1_G_GPIO_Port GPIOA
 #define LED1_B_Pin GPIO_PIN_1
 #define LED1_B_GPIO_Port GPIOA
-#define VCP_TX_Pin GPIO_PIN_2
-#define VCP_TX_GPIO_Port GPIOA
+#define LED3_B_Pin GPIO_PIN_2
+#define LED3_B_GPIO_Port GPIOA
 #define LED2_R_Pin GPIO_PIN_3
 #define LED2_R_GPIO_Port GPIOA
 #define LED2_G_Pin GPIO_PIN_4
