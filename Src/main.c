@@ -52,7 +52,7 @@
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 #define PERIOD_MIN 100			// minimum period in milliseconds
-#define PERIOD_MAX 1000			// maximum period in milliseconds
+#define PERIOD_MAX 600			// maximum period in milliseconds
 
 uint32_t tickNow;						// global access to tick count
 
@@ -62,8 +62,47 @@ typedef enum stateLed1
 	LED1_G,
 	LED1_B
 } stateLed1_t;
-
 stateLed1_t stateLed1 = LED1_R;
+
+typedef enum stateLed2
+{
+	LED2_R,
+	LED2_G,
+	LED2_B
+} stateLed2_t;
+stateLed2_t stateLed2 = LED2_R;
+
+typedef enum stateLed3
+{
+	LED3_R,
+	LED3_G,
+	LED3_B
+} stateLed3_t;
+stateLed3_t stateLed3 = LED3_R;
+
+typedef enum stateLed4
+{
+	LED4_R,
+	LED4_G,
+	LED4_B
+} stateLed4_t;
+stateLed4_t stateLed4 = LED4_R;
+
+typedef enum stateLed5
+{
+	LED5_R,
+	LED5_G,
+	LED5_B
+} stateLed5_t;
+stateLed5_t stateLed5 = LED5_R;
+
+typedef enum stateLed6
+{
+	LED6_R,
+	LED6_G,
+	LED6_B
+} stateLed6_t;
+stateLed6_t stateLed6 = LED6_R;
 
 /* USER CODE END PV */
 
@@ -74,6 +113,11 @@ void SystemClock_Config(void);
 /* Private function prototypes -----------------------------------------------*/
 uint32_t GenerateRandomNumber(void);
 void led1Handler(void);
+void led2Handler(void);
+void led3Handler(void);
+void led4Handler(void);
+void led5Handler(void);
+void led6Handler(void);
 
 /* USER CODE END PFP */
 
@@ -120,6 +164,11 @@ int main(void)
 		tickNow = HAL_GetTick();
 		// service LED 1 state machine
 		led1Handler();
+		led2Handler();
+		led3Handler();
+		led4Handler();
+		led5Handler();
+		led6Handler();
 		
   /* USER CODE END WHILE */
 
@@ -272,6 +321,502 @@ void led1Handler(void)
 					else
 					{
 						stateLed1 = LED1_G;
+						frist = 1;
+					}
+				}
+				break;
+			}
+			
+			default:
+			{
+				while(1);
+			}
+		}
+}
+
+
+void led2Handler(void)
+{
+	switch(stateLed2)
+		{	
+			static uint8_t frist = 0;					// first pass flag
+			static uint32_t tickWas = 0;			// sysTick at the last transition
+			static uint32_t period = 0;				// random period
+			
+			case LED2_R:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED2_R_GPIO_Port, LED2_R_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED2_R_GPIO_Port, LED2_R_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed2 = LED2_G;
+						frist = 1;
+					}
+					else
+					{
+						stateLed2 = LED2_B;
+						frist = 1;
+					}
+				}
+			break;
+			}
+			
+			case LED2_G:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED2_G_GPIO_Port, LED2_G_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED2_G_GPIO_Port, LED2_G_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed2 = LED2_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed2 = LED2_B;
+						frist = 1;
+					}
+				}
+				break;
+				
+			}
+			case LED2_B:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED2_B_GPIO_Port, LED2_B_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED2_B_GPIO_Port, LED2_B_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed2 = LED2_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed2 = LED2_G;
+						frist = 1;
+					}
+				}
+				break;
+			}
+			
+			default:
+			{
+				while(1);
+			}
+		}
+}
+
+void led3Handler(void)
+{
+	switch(stateLed3)
+		{	
+			static uint8_t frist = 0;					// first pass flag
+			static uint32_t tickWas = 0;			// sysTick at the last transition
+			static uint32_t period = 0;				// random period
+			
+			case LED3_R:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED3_R_GPIO_Port, LED3_R_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED3_R_GPIO_Port, LED3_R_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed3 = LED3_G;
+						frist = 1;
+					}
+					else
+					{
+						stateLed3 = LED3_B;
+						frist = 1;
+					}
+				}
+			break;
+			}
+			
+			case LED3_G:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED3_G_GPIO_Port, LED3_G_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED3_G_GPIO_Port, LED3_G_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed3 = LED3_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed3 = LED3_B;
+						frist = 1;
+					}
+				}
+				break;
+				
+			}
+			case LED3_B:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED3_B_GPIO_Port, LED3_B_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED3_B_GPIO_Port, LED3_B_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed3 = LED3_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed3 = LED3_G;
+						frist = 1;
+					}
+				}
+				break;
+			}
+			
+			default:
+			{
+				while(1);
+			}
+		}
+}
+
+void led4Handler(void)
+{
+	switch(stateLed4)
+		{	
+			static uint8_t frist = 0;					// first pass flag
+			static uint32_t tickWas = 0;			// sysTick at the last transition
+			static uint32_t period = 0;				// random period
+			
+			case LED4_R:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED4_R_GPIO_Port, LED4_R_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED4_R_GPIO_Port, LED4_R_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed4 = LED4_G;
+						frist = 1;
+					}
+					else
+					{
+						stateLed4 = LED4_B;
+						frist = 1;
+					}
+				}
+			break;
+			}
+			
+			case LED4_G:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED4_G_GPIO_Port, LED4_G_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED4_G_GPIO_Port, LED4_G_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed4 = LED4_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed4 = LED4_B;
+						frist = 1;
+					}
+				}
+				break;
+				
+			}
+			case LED4_B:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED4_B_GPIO_Port, LED4_B_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED4_B_GPIO_Port, LED4_B_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed4 = LED4_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed4 = LED4_G;
+						frist = 1;
+					}
+				}
+				break;
+			}
+			
+			default:
+			{
+				while(1);
+			}
+		}
+}
+
+void led5Handler(void)
+{
+	switch(stateLed5)
+		{	
+			static uint8_t frist = 0;					// first pass flag
+			static uint32_t tickWas = 0;			// sysTick at the last transition
+			static uint32_t period = 0;				// random period
+			
+			case LED5_R:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED5_R_GPIO_Port, LED5_R_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED5_R_GPIO_Port, LED5_R_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed5 = LED5_G;
+						frist = 1;
+					}
+					else
+					{
+						stateLed5 = LED5_B;
+						frist = 1;
+					}
+				}
+			break;
+			}
+			
+			case LED5_G:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED5_G_GPIO_Port, LED5_G_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED5_G_GPIO_Port, LED5_G_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed5 = LED5_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed5 = LED5_B;
+						frist = 1;
+					}
+				}
+				break;
+				
+			}
+			case LED5_B:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED5_B_GPIO_Port, LED5_B_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED5_B_GPIO_Port, LED5_B_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed5 = LED5_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed5 = LED5_G;
+						frist = 1;
+					}
+				}
+				break;
+			}
+			
+			default:
+			{
+				while(1);
+			}
+		}
+}
+
+void led6Handler(void)
+{
+	switch(stateLed6)
+		{	
+			static uint8_t frist = 0;					// first pass flag
+			static uint32_t tickWas = 0;			// sysTick at the last transition
+			static uint32_t period = 0;				// random period
+			
+			case LED6_R:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED6_R_GPIO_Port, LED6_R_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED6_R_GPIO_Port, LED6_R_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed6 = LED6_G;
+						frist = 1;
+					}
+					else
+					{
+						stateLed6 = LED6_B;
+						frist = 1;
+					}
+				}
+			break;
+			}
+			
+			case LED6_G:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED6_G_GPIO_Port, LED6_G_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED6_G_GPIO_Port, LED6_G_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed6 = LED6_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed6 = LED6_B;
+						frist = 1;
+					}
+				}
+				break;
+				
+			}
+			case LED6_B:
+			{
+				// if this is the first pass through this state
+				if(frist)
+				{
+					period = GenerateRandomNumber();
+					HAL_GPIO_WritePin(LED6_B_GPIO_Port, LED6_B_Pin, GPIO_PIN_SET);
+					tickWas = tickNow;
+					frist = 0;
+				}
+				// otherwise wait until the assigned random period has elapsed and decide which colour is next
+				if((tickNow - tickWas) > period)
+				{
+					HAL_GPIO_WritePin(LED6_B_GPIO_Port, LED6_B_Pin, GPIO_PIN_RESET);
+					if(period < 550)
+					{
+						stateLed6 = LED6_R;
+						frist = 1;
+					}
+					else
+					{
+						stateLed6 = LED6_G;
 						frist = 1;
 					}
 				}
